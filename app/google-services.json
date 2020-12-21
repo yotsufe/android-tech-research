@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "76520968457",
+    "firebase_url": "https://dev-test-9a83f.firebaseio.com",
+    "project_id": "dev-test-9a83f",
+    "storage_bucket": "dev-test-9a83f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76520968457:android:12e4791354df3bd0dfc3d8",
+        "android_client_info": {
+          "package_name": "com.yotsufe.techresearch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "76520968457-l13ck98457n1ps9vjlbj2aqsf8rmi400.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc1POCTJFlXgIhxc6DJyKUeTwEmgYhB_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "76520968457-l13ck98457n1ps9vjlbj2aqsf8rmi400.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
