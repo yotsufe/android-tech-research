@@ -26,6 +26,7 @@
         <activity android:name="com.yotsufe.techresearch.NetworkTestActivity" />
         <activity android:name="com.yotsufe.techresearch.RemoteConfigTestActivity" />
         <activity android:name="com.yotsufe.techresearch.RecordingTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.RecordingVideoTestActivity" />
         <activity android:name="com.yotsufe.techresearch.WebViewTestActivity" />
     </application>
 

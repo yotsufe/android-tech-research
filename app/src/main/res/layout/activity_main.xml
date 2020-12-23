@@ -70,6 +70,18 @@
             app:layout_constraintVertical_bias=".5" />
 
         <Button
+            android:id="@+id/btn_recording_video_test"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Recording Video Test"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintVertical_bias=".6" />
+
+        <Button
             android:id="@+id/btn_network_test"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -79,7 +91,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".6" />
+            app:layout_constraintVertical_bias=".7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

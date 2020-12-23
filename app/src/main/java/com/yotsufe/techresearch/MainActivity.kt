@@ -38,6 +38,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, RecordingTestActivity::class.java))
         }
 
+        binding.btnRecordingVideoTest.setOnClickListener {
+            startActivity(Intent(this, RecordingVideoTestActivity::class.java))
+        }
+
         binding.btnNetworkTest.setOnClickListener {
             startActivity(Intent(this, NetworkTestActivity::class.java))
         }
