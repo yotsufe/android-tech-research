@@ -28,6 +28,15 @@
         <activity android:name="com.yotsufe.techresearch.RecordingTestActivity" />
         <activity android:name="com.yotsufe.techresearch.RecordingVideoTestActivity" />
         <activity android:name="com.yotsufe.techresearch.WebViewTestActivity" />
+
+        <service
+            android:name="com.yotsufe.techresearch.ResearchFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
