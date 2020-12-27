@@ -31,12 +31,11 @@ class RecordingTestActivity : AppCompatActivity() {
     }
     private var player: MediaPlayer? = null
     private var filePath: String = Environment.getExternalStorageDirectory()
-        .absolutePath + "/testrecording.mp3"
+        .absolutePath + "/test_recording.mp3"
     private var isPlaying = false
     private var isRecording = false
 
     private var permissionToRecordAccepted = false
-    private var permissions: Array<String> = arrayOf(Manifest.permission.RECORD_AUDIO)
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
