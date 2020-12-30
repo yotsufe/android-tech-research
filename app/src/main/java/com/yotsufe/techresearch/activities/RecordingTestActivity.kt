@@ -1,4 +1,4 @@
-package com.yotsufe.techresearch
+package com.yotsufe.techresearch.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.databinding.ActivityRecordingTestBinding
 import com.yotsufe.techresearch.models.Base64Encoder
 import kotlinx.android.synthetic.main.activity_recording_test.*
@@ -55,7 +56,9 @@ class RecordingTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_recording_test)
+        binding = DataBindingUtil.setContentView(this,
+            R.layout.activity_recording_test
+        )
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED

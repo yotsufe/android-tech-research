@@ -1,4 +1,4 @@
-package com.yotsufe.techresearch
+package com.yotsufe.techresearch.services
 
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService

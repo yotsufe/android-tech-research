@@ -16,22 +16,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:fullBackupContent="@xml/backup_descriptor">
-        <activity android:name="com.yotsufe.techresearch.MainActivity">
+        <activity android:name="com.yotsufe.techresearch.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.yotsufe.techresearch.AnimationTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.HttpTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.NetworkTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.RemoteConfigTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.RecordingTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.RecordingVideoTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.WebViewTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.AnimationTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.HttpTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.NetworkTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.RemoteConfigTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.RecordingTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.RecordingVideoTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.WebViewTestActivity" />
 
         <service
-            android:name="com.yotsufe.techresearch.ResearchFirebaseMessagingService"
+            android:name="com.yotsufe.techresearch.services.ResearchFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
