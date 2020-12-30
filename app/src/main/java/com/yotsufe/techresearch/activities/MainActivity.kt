@@ -1,4 +1,4 @@
-package com.yotsufe.techresearch
+package com.yotsufe.techresearch.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.inappmessaging.ktx.inAppMessaging
 import com.google.firebase.ktx.Firebase
+import com.yotsufe.techresearch.*
 import com.yotsufe.techresearch.databinding.ActivityMainBinding
 import com.yotsufe.techresearch.inappmessaging.CustomMessagingDisplayComponent
 
@@ -15,7 +16,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this,
+            R.layout.activity_main
+        )
 
         Firebase.inAppMessaging.setMessageDisplayComponent(CustomMessagingDisplayComponent(this))
         binding.btnRemoteConfigTest.setOnClickListener {
