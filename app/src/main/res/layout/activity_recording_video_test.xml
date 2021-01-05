@@ -35,6 +35,32 @@
             app:layout_constraintHorizontal_bias="0.7"
             tools:ignore="ContentDescription" />
 
+        <TextView
+            android:id="@+id/btn_count_up"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="+"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2"
+            app:layout_constraintHorizontal_bias="0.3" />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="0"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2"
+            app:layout_constraintHorizontal_bias="0.7" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
