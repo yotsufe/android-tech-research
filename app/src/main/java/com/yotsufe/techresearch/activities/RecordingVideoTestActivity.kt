@@ -10,9 +10,11 @@ import android.hardware.display.VirtualDisplay
 import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
+import android.widget.MediaController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -28,8 +30,8 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private var isPlaying: Boolean = false
     private var isRecording: Boolean = false
 
-    private var filePath: String = Environment.getExternalStorageDirectory()
-            .absolutePath + "/video_recording.mp4"
+    private var directoryPath: String = Environment.getExternalStorageDirectory()
+        .absolutePath
     private var mediaRecorder: MediaRecorder? = null
 
     private var count:Int = 0
@@ -68,10 +70,10 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
             val permissions = arrayOf(
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -84,12 +86,24 @@ class RecordingVideoTestActivity : AppCompatActivity() {
 
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
 
-        binding.btnRecController.setOnClickListener {
-            onRecord(isRecording)
+        binding.btnRecController1.setOnClickListener {
+            onRecord(isRecording, "/video_recording1.mp4")
         }
 
-        binding.btnPlayController.setOnClickListener {
-            onRecord(isPlaying)
+        binding.btnRecStop1.setOnClickListener {
+            onRecord(isRecording, "")
+        }
+
+        binding.btnRecController2.setOnClickListener {
+            onRecord(isRecording, "/video_recording2.mp4")
+        }
+
+        binding.btnRecStop2.setOnClickListener {
+            onRecord(isRecording, "")
+        }
+
+        binding.btnStitching.setOnClickListener {
+            stitchVideo()
         }
 
         binding.btnCountUp.setOnClickListener {
@@ -97,16 +111,20 @@ class RecordingVideoTestActivity : AppCompatActivity() {
             binding.count.text = "$count"
         }
 
+        binding.btnPlayController.setOnClickListener {
+            onPlay(isPlaying)
+        }
+
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
         screenDensity = metrics.densityDpi
     }
 
-    private fun onRecord(isRecording: Boolean) {
+    private fun onRecord(isRecording: Boolean, fileName: String) {
         if (isRecording) {
             stopRecording()
         } else {
-            startRecording()
+            startRecording(fileName)
         }
     }
 
@@ -118,32 +136,43 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         }
     }
 
-    private fun startRecording() {
-        binding.btnRecController.setImageResource(R.drawable.ic_stop_24)
+    private fun startRecording(fileName: String) {
+        binding.btnRecController1.setImageResource(R.drawable.ic_stop_24)
         isRecording = true
-        initRecorder()
+        initRecorder(fileName)
         startShareScreen()
     }
 
     private fun stopRecording() {
-        binding.btnRecController.setImageResource(R.drawable.ic_mic_24)
+        binding.btnRecController1.setImageResource(R.drawable.ic_mic_24)
         isRecording = false
         mediaRecorder?.stop()
         mediaRecorder?.reset()
     }
 
+    private fun stitchVideo() {
+    }
+
     private fun startPlaying() {
+        binding.videoView.run {
+            setVideoURI(Uri.parse(directoryPath))
+            setOnPreparedListener {
+                start()
+            }
+            setMediaController(MediaController(this@RecordingVideoTestActivity))
+        }
+
     }
 
     private fun stopPlaying() {
     }
 
-    private fun initRecorder() {
+    private fun initRecorder(fileName: String) {
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
             setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            setOutputFile(filePath)
+            setOutputFile(directoryPath + fileName)
             setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
             setVideoEncoder(MediaRecorder.VideoEncoder.H264)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
@@ -184,11 +213,11 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     }
 
     private fun stopShareScreen() {
-            if (virtualDisplay == null) {
-                return
-            }
-            virtualDisplay?.release()
-            destroyMediaProjection()
+        if (virtualDisplay == null) {
+            return
+        }
+        virtualDisplay?.release()
+        destroyMediaProjection()
     }
 
     private fun createVirtualDisplay(): VirtualDisplay? {
