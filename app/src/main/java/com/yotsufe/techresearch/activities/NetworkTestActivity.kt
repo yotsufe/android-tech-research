@@ -1,4 +1,4 @@
-package com.yotsufe.techresearch
+package com.yotsufe.techresearch.activities
 
 import android.content.Context
 import android.net.*
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
+import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.databinding.ActivityNetworkTestBinding
 
 class NetworkTestActivity : AppCompatActivity() {
@@ -18,7 +19,9 @@ class NetworkTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_network_test)
+        binding = DataBindingUtil.setContentView(this,
+            R.layout.activity_network_test
+        )
     }
 
     override fun onResume() {

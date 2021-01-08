@@ -1,4 +1,4 @@
-package com.yotsufe.techresearch
+package com.yotsufe.techresearch.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.ViewAnimationUtils
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.databinding.DataBindingUtil
+import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.databinding.ActivityAnimationTestBinding
 import kotlin.math.hypot
 
@@ -16,7 +17,9 @@ class AnimationTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_animation_test)
+        binding = DataBindingUtil.setContentView(this,
+            R.layout.activity_animation_test
+        )
 
         binding.btnAnimationOne.setOnClickListener {
             startAnimationOne(it)

@@ -1,4 +1,4 @@
-package com.yotsufe.techresearch
+package com.yotsufe.techresearch.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,8 +6,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
-import com.yotsufe.techresearch.databinding.ActivityHttpTestBinding
-import com.yotsufe.techresearch.databinding.ActivityMainBinding
+import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.databinding.ActivityWebViewTestBinding
 
 class WebViewTestActivity : AppCompatActivity() {
@@ -16,7 +15,9 @@ class WebViewTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_web_view_test)
+        binding = DataBindingUtil.setContentView(this,
+            R.layout.activity_web_view_test
+        )
         WebView.setWebContentsDebuggingEnabled(true)
 
         binding.wevViewTest.let {
