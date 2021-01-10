@@ -20,9 +20,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.googlecode.mp4parser.authoring.Movie
+import com.googlecode.mp4parser.authoring.Track
+import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder
+import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator
+import com.googlecode.mp4parser.authoring.tracks.AppendTrack
 import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.databinding.ActivityRecordingVideoTestBinding
-import java.lang.Exception
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 
 class RecordingVideoTestActivity : AppCompatActivity() {
 
@@ -30,8 +37,9 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private var isPlaying: Boolean = false
     private var isRecording: Boolean = false
 
-    private var directoryPath: String = Environment.getExternalStorageDirectory()
-        .absolutePath
+    private val directoryPath: String = Environment.getExternalStorageDirectory().absolutePath
+    private val fileName1 =  "/video_recording1.mp4"
+    private val fileName2 =  "/video_recording2.mp4"
     private var mediaRecorder: MediaRecorder? = null
 
     private var count:Int = 0
@@ -87,7 +95,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
 
         binding.btnRecController1.setOnClickListener {
-            onRecord(isRecording, "/video_recording1.mp4")
+            onRecord(isRecording, fileName1)
         }
 
         binding.btnRecStop1.setOnClickListener {
@@ -95,7 +103,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         }
 
         binding.btnRecController2.setOnClickListener {
-            onRecord(isRecording, "/video_recording2.mp4")
+            onRecord(isRecording, fileName2)
         }
 
         binding.btnRecStop2.setOnClickListener {
@@ -103,7 +111,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         }
 
         binding.btnStitching.setOnClickListener {
-            stitchVideo()
+            stitchByMP4Parser()
         }
 
         binding.btnCountUp.setOnClickListener {
@@ -150,7 +158,38 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         mediaRecorder?.reset()
     }
 
-    private fun stitchVideo() {
+    private fun stitchByMP4Parser() {
+        val movie1 = MovieCreator.build(directoryPath + fileName1)
+        val movie2 = MovieCreator.build(directoryPath + fileName2)
+        val inMovies = arrayOf<Movie>(movie1, movie2)
+
+        val videoTracks = LinkedList<Track>()
+        val audioTracks = LinkedList<Track>()
+        for (m in inMovies) {
+            for (t in m.tracks) {
+                if (t.handler == "soun") {
+                    audioTracks.add(t)
+                }
+                if (t.handler == "vide") {
+                    videoTracks.add(t)
+                }
+            }
+        }
+
+        val result = Movie()
+        if (audioTracks.size > 0) {
+            result.addTrack(AppendTrack(audioTracks[0], audioTracks[1]))
+        }
+        if (videoTracks.size > 0) {
+            result.addTrack(AppendTrack(videoTracks[0], videoTracks[1]))
+        }
+
+        val out = DefaultMp4Builder().build(result)
+        val outputFilePath = "$directoryPath/after_editing.mp4"
+
+        val fos = FileOutputStream(File(outputFilePath))
+        out.writeContainer(fos.channel)
+        fos.close()
     }
 
     private fun startPlaying() {
