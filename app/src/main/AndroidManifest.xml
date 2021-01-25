@@ -27,6 +27,7 @@
         </activity>
         <activity android:name="com.yotsufe.techresearch.activities.AnimationTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.HttpTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.MediaPlayerTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.NetworkTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.RemoteConfigTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.RecordingTestActivity" />

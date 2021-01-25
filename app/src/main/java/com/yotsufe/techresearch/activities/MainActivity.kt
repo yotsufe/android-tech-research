@@ -20,6 +20,10 @@ class MainActivity : AppCompatActivity() {
             R.layout.activity_main
         )
 
+        binding.btnNetworkTest.setOnClickListener {
+            startActivity(Intent(this, NetworkTestActivity::class.java))
+        }
+
         Firebase.inAppMessaging.setMessageDisplayComponent(CustomMessagingDisplayComponent(this))
         binding.btnRemoteConfigTest.setOnClickListener {
             startActivity(Intent(this, RemoteConfigTestActivity::class.java))
@@ -45,9 +49,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, RecordingVideoTestActivity::class.java))
         }
 
-        binding.btnNetworkTest.setOnClickListener {
-            startActivity(Intent(this, NetworkTestActivity::class.java))
+        binding.btnMediaPlayerTest.setOnClickListener {
+            startActivity(Intent(this, MediaPlayerTestActivity::class.java))
         }
+
 
     }
 

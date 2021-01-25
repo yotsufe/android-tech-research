@@ -10,6 +10,18 @@
         tools:context=".activities.MainActivity">
 
         <Button
+            android:id="@+id/btn_network_test"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Network Test"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintVertical_bias=".1" />
+
+        <Button
             android:id="@+id/btn_remote_config_test"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -19,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".1" />
+            app:layout_constraintVertical_bias=".2" />
 
         <Button
             android:id="@+id/btn_http_test"
@@ -31,7 +43,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".2" />
+            app:layout_constraintVertical_bias=".3" />
 
         <Button
             android:id="@+id/btn_animation_test"
@@ -43,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".3" />
+            app:layout_constraintVertical_bias=".4" />
 
         <Button
             android:id="@+id/btn_web_view_test"
@@ -55,7 +67,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".4" />
+            app:layout_constraintVertical_bias=".5" />
 
         <Button
             android:id="@+id/btn_recording_test"
@@ -67,7 +79,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".5" />
+            app:layout_constraintVertical_bias=".6" />
 
         <Button
             android:id="@+id/btn_recording_video_test"
@@ -79,19 +91,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".6" />
+            app:layout_constraintVertical_bias=".7" />
 
         <Button
-            android:id="@+id/btn_network_test"
+            android:id="@+id/btn_media_player_test"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Network Test"
+            android:text="Media Player Test"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent=".8"
-            app:layout_constraintVertical_bias=".7" />
+            app:layout_constraintVertical_bias=".8" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
