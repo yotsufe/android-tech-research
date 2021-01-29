@@ -5,16 +5,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.display.DisplayManager
-import android.hardware.display.VirtualDisplay
-import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.os.Environment
 import android.util.DisplayMetrics
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -27,6 +22,7 @@ import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack
 import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.databinding.ActivityRecordingVideoTestBinding
+import com.yotsufe.techresearch.services.MediaProjectionService
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -37,25 +33,18 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private var isRecording: Boolean = false
 
     private val directoryPath: String = Environment.getExternalStorageDirectory().absolutePath
-    private val fileName1 = "/video_recording1.mp4"
-    private val fileName2 = "/video_recording2.mp4"
-    private var mediaRecorder: MediaRecorder? = null
+    private val fileName1 = "video_recording1"
+    private val fileName2 = "video_recording2"
 
     private var count:Int = 0
 
     private var mediaProjection: MediaProjection? = null
-    private var virtualDisplay: VirtualDisplay? = null
     private var screenDensity: Int = 0
-    private var mediaProjectionCallback: MediaProjection.Callback? = null
     private var mediaProjectionManager: MediaProjectionManager? = null
     private var permissionToRecordAccepted = false
 
     companion object {
-        private const val DISPLAY_WIDTH = 720
-        private const val DISPLAY_HEIGHT = 1280
-
         private const val REQUEST_RECORD_VIDEO_PERMISSION = 200
-        private const val MAX_DURATION_MS = 15 * 1000
     }
 
     override fun onRequestPermissionsResult(
@@ -92,29 +81,29 @@ class RecordingVideoTestActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_recording_video_test)
 
-        // ステータスバー非表示
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        // ナビゲーションバー非表示
-        window.decorView.apply {
-            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
-        }
+//        // ステータスバー非表示
+//        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+//        // ナビゲーションバー非表示
+//        window.decorView.apply {
+//            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
+//        }
 
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
 
         binding.btnRecController1.setOnClickListener {
-            onRecord(isRecording, fileName1)
+            onRecord(isRecording)
         }
 
         binding.btnRecStop1.setOnClickListener {
-            onRecord(isRecording, "")
+            onRecord(isRecording)
         }
 
         binding.btnRecController2.setOnClickListener {
-            onRecord(isRecording, fileName2)
+            onRecord(isRecording)
         }
 
         binding.btnRecStop2.setOnClickListener {
-            onRecord(isRecording, "")
+            onRecord(isRecording)
         }
 
         binding.btnStitching.setOnClickListener {
@@ -131,31 +120,30 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         screenDensity = metrics.densityDpi
     }
 
-    private fun onRecord(isRecording: Boolean, fileName: String) {
+    private fun onRecord(isRecording: Boolean) {
         if (isRecording) {
             stopRecording()
         } else {
-            startRecording(fileName)
+            startRecording()
         }
     }
 
-    private fun startRecording(fileName: String) {
+    private fun startRecording() {
         binding.btnRecController1.setImageResource(R.drawable.ic_stop_24)
         isRecording = true
-        initRecorder(fileName)
         startShareScreen()
     }
 
     private fun stopRecording() {
         binding.btnRecController1.setImageResource(R.drawable.ic_mic_24)
         isRecording = false
-        mediaRecorder?.stop()
-        mediaRecorder?.reset()
+        val intent = Intent(this, MediaProjectionService::class.java)
+        stopService(intent)
     }
 
     private fun stitchByMP4Parser() {
-        val movie1 = MovieCreator.build(directoryPath + fileName1)
-        val movie2 = MovieCreator.build(directoryPath + fileName2)
+        val movie1 = MovieCreator.build("${directoryPath}/${fileName1}.mp4")
+        val movie2 = MovieCreator.build("${directoryPath}/${fileName2}.mp4")
         val inMovies = arrayOf<Movie>(movie1, movie2)
 
         val videoTracks = LinkedList<Track>()
@@ -187,71 +175,12 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         fos.close()
     }
 
-    private fun initRecorder(fileName: String) {
-        mediaRecorder = MediaRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setVideoSource(MediaRecorder.VideoSource.SURFACE)
-            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            setOutputFile(directoryPath + fileName)
-            setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
-            setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-            setVideoEncodingBitRate(512 * 1000)
-            setVideoFrameRate(30)
-            setMaxDuration(MAX_DURATION_MS)
-            setOnInfoListener { _, what, _ ->
-                when (what) {
-                    MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED -> {
-                        Toast.makeText(applicationContext, "最大録音時間に達しました。", Toast.LENGTH_SHORT)
-                                .show()
-                        stopRecording()
-                    }
-                    MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED -> {
-                        Toast.makeText(applicationContext, "空き領域がなくなりました。", Toast.LENGTH_SHORT)
-                                .show()
-                        stopRecording()
-                    }
-                }
-            }
-            try {
-                prepare()
-            } catch (e: Exception) {
-            }
-        }
-    }
-
     private fun startShareScreen() {
         if (mediaProjection == null) {
             startActivityForResult(mediaProjectionManager?.createScreenCaptureIntent(), 1000)
             return
         }
 
-        virtualDisplay = createVirtualDisplay()
-        try {
-            mediaRecorder?.start()
-        } catch (e: Exception) {
-        }
-    }
-
-    private fun stopShareScreen() {
-        if (virtualDisplay == null) {
-            return
-        }
-        virtualDisplay?.release()
-        destroyMediaProjection()
-    }
-
-    private fun createVirtualDisplay(): VirtualDisplay? {
-        return mediaProjection?.createVirtualDisplay("test",
-                DISPLAY_WIDTH, DISPLAY_HEIGHT, screenDensity,
-                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                mediaRecorder?.surface, null, null)
-    }
-
-    private fun destroyMediaProjection() {
-        mediaProjection?.unregisterCallback(mediaProjectionCallback)
-        mediaProjection?.stop()
-        mediaProjection = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -265,19 +194,22 @@ class RecordingVideoTestActivity : AppCompatActivity() {
                 .show()
             return
         }
-        mediaProjectionCallback = object : MediaProjection.Callback() {
-            override fun onStop() {
-                super.onStop()
-                stopRecording()
-                mediaProjection = null
-                stopShareScreen()
-            }
+
+        val metrics = resources.displayMetrics
+        val intent = Intent(this, MediaProjectionService::class.java).apply {
+            putExtra("code", resultCode)
+            putExtra("data", data)
+            putExtra("height", metrics.heightPixels)
+            putExtra("width", metrics.widthPixels)
+            putExtra("dpi", metrics.densityDpi)
+            putExtra("fileName", fileName1)
         }
 
-        mediaProjection = mediaProjectionManager?.getMediaProjection(resultCode, data!!)
-        mediaProjection?.registerCallback(mediaProjectionCallback, null)
-        virtualDisplay = createVirtualDisplay()
-        mediaRecorder?.start()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
     }
 
 }
