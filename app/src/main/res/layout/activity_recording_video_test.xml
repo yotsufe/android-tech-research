@@ -140,6 +140,19 @@
             app:layout_constraintHorizontal_bias="0.7" />
 
         <Button
+            android:id="@+id/btn_service_fun"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Service Function"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4"
+            app:layout_constraintHorizontal_bias="0.5" />
+
+        <Button
             android:id="@+id/btn_stitching"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -149,7 +162,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4"
+            app:layout_constraintVertical_bias="0.5"
             app:layout_constraintHorizontal_bias="0.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

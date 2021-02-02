@@ -9,10 +9,9 @@ import android.hardware.display.VirtualDisplay
 import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
-import android.os.Build
-import android.os.Environment
-import android.os.IBinder
+import android.os.*
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 
 class MediaProjectionService : Service() {
@@ -27,9 +26,24 @@ class MediaProjectionService : Service() {
     private var height = 2800
     private var width = 1400
     private var dpi = 1000
+    private val binder = MediaProjectionBinder()
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
+    inner class MediaProjectionBinder : Binder() {
+        fun showToast() {
+            Log.d("###", "showToast()")
+            Toast.makeText(applicationContext, "testBinder", Toast.LENGTH_LONG)
+                    .show()
+        }
+    }
+
+    override fun onBind(intent: Intent?): IBinder {
+        Log.d("###", "onBind start.")
+        return binder
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.d("###", "onUnbind start.")
+        return super.onUnbind(intent)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

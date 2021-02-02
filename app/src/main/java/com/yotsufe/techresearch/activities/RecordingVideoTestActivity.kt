@@ -2,13 +2,16 @@ package com.yotsufe.techresearch.activities
 
 import android.Manifest
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.os.Environment
+import android.os.IBinder
 import android.util.DisplayMetrics
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,12 +39,23 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private val fileName1 = "video_recording1"
     private val fileName2 = "video_recording2"
 
-    private var count:Int = 0
+    private var count: Int = 0
 
     private var mediaProjection: MediaProjection? = null
     private var screenDensity: Int = 0
     private var mediaProjectionManager: MediaProjectionManager? = null
     private var permissionToRecordAccepted = false
+    private var mediaProjectionBinder: MediaProjectionService.MediaProjectionBinder? = null
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            mediaProjectionBinder = binder as MediaProjectionService.MediaProjectionBinder
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            mediaProjectionBinder = null
+        }
+    }
+
 
     companion object {
         private const val REQUEST_RECORD_VIDEO_PERMISSION = 200
@@ -68,9 +82,9 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-                    != PackageManager.PERMISSION_GRANTED
+                != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
             val permissions = arrayOf(
                     Manifest.permission.RECORD_AUDIO,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -106,14 +120,19 @@ class RecordingVideoTestActivity : AppCompatActivity() {
             onRecord(isRecording)
         }
 
-        binding.btnStitching.setOnClickListener {
-            stitchByMP4Parser()
-        }
-
         binding.btnCountUp.setOnClickListener {
             count += 1
             binding.count.text = "$count"
         }
+
+        binding.btnServiceFun.setOnClickListener {
+            mediaProjectionBinder?.showToast()
+        }
+
+        binding.btnStitching.setOnClickListener {
+            stitchByMP4Parser()
+        }
+
 
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
@@ -137,6 +156,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private fun stopRecording() {
         binding.btnRecController1.setImageResource(R.drawable.ic_mic_24)
         isRecording = false
+        unbindService(connection)
         val intent = Intent(this, MediaProjectionService::class.java)
         stopService(intent)
     }
@@ -191,7 +211,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         }
         if (resultCode != Activity.RESULT_OK) {
             Toast.makeText(this, "Screen Cast Permission Denied", Toast.LENGTH_SHORT)
-                .show()
+                    .show()
             return
         }
 
@@ -210,6 +230,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         } else {
             startService(intent)
         }
+        bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
 }
