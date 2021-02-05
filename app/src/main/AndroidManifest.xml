@@ -33,7 +33,8 @@
         <activity android:name="com.yotsufe.techresearch.activities.NetworkTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.RemoteConfigTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.RecordingTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.activities.RecordingVideoTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.recordingvideo.RecordingViewPagerTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.recordingvideo.RecordingVideoTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.WebViewTestActivity" />
 
         <service

@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import com.google.firebase.inappmessaging.ktx.inAppMessaging
 import com.google.firebase.ktx.Firebase
 import com.yotsufe.techresearch.*
+import com.yotsufe.techresearch.activities.recordingvideo.RecordingVideoTestActivity
 import com.yotsufe.techresearch.databinding.ActivityMainBinding
 import com.yotsufe.techresearch.inappmessaging.CustomMessagingDisplayComponent
 
