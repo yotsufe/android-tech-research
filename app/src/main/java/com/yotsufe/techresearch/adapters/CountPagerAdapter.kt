@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.yotsufe.techresearch.R
 
 class CountPagerAdapter(
         private val activity: AppCompatActivity
@@ -23,6 +24,7 @@ class CountPagerAdapter(
         tv.setTextColor(Color.BLACK)
         tv.textSize = 30f
         tv.gravity = Gravity.CENTER
+        tv.background = activity.getDrawable(R.drawable.border)
         (container as ViewPager).addView(tv, 0)
         return tv
     }
