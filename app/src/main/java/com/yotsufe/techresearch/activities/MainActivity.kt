@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, MediaPlayerTestActivity::class.java))
         }
 
-
     }
 
 }
