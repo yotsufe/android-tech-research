@@ -159,7 +159,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     }
 
     private fun stopRecording() {
-        binding.btnRecController1.setImageResource(R.drawable.ic_mic_24)
+        binding.btnRecController1.setImageResource(R.drawable.ic_baseline_videocam_24)
         isRecording = false
         unbindService(connection)
         val intent = Intent(this, MediaProjectionService::class.java)
