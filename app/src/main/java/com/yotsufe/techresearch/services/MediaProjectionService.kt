@@ -34,6 +34,13 @@ class MediaProjectionService : Service() {
             Toast.makeText(applicationContext, "testBinder", Toast.LENGTH_LONG)
                     .show()
         }
+
+        fun startRecording(currentPage: Int) {
+            startMediaRecorder(currentPage)
+        }
+        fun stopRecording() {
+            stopMediaRecorder()
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder {
@@ -133,12 +140,45 @@ class MediaProjectionService : Service() {
         projection.stop()
     }
 
-    private fun getFilePath(): String {
+    fun startMediaRecorder(currentPage: Int) {
+        mediaRecorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setVideoSource(MediaRecorder.VideoSource.SURFACE)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            setVideoEncodingBitRate(1080 * 10000)
+            setVideoFrameRate(30)
+            setVideoSize(width, height)
+            setAudioSamplingRate(44100)
+            setOutputFile(getFilePath(currentPage))
+            prepare()
+        }
+
+        virtualDisplay = projection.createVirtualDisplay(
+                "recode",
+                width,
+                height,
+                dpi,
+                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+                mediaRecorder.surface,
+                null,
+                null
+        )
+
+        mediaRecorder.start()
+    }
+
+    fun stopMediaRecorder(){
+        mediaRecorder.stop()
+    }
+
+    private fun getFilePath(currentPage: Int = 0): String {
         // TODO 適切なストレージを指定する
         val scopedStoragePath = Environment.getExternalStorageDirectory()
         Log.d("###", scopedStoragePath!!.absolutePath)
-        Log.d("###", "${scopedStoragePath.path}/${fileName}.mp4")
-        return "${scopedStoragePath.path}/${fileName}.mp4"
+        Log.d("###", "${scopedStoragePath.path}/${fileName}_${currentPage}.mp4")
+        return "${scopedStoragePath.path}/${fileName}_${currentPage}.mp4"
     }
 
 }
