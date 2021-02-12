@@ -100,7 +100,7 @@ class MediaProjectionService : Service() {
         }
         projectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         projection = projectionManager.getMediaProjection(code, data!!)
-
+Log.d("###", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
@@ -111,12 +111,9 @@ class MediaProjectionService : Service() {
             setVideoFrameRate(30)
             setVideoSize(width, height)
             setAudioSamplingRate(44100)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                setOutputFile(getFilePath())
-            } else {
-                setOutputFile(getFilePath())
-            }
+            setOutputFile(getFilePath())
             prepare()
+Log.d("###", "finish prepare")
         }
 
         virtualDisplay = projection.createVirtualDisplay(
@@ -131,6 +128,7 @@ class MediaProjectionService : Service() {
         )
 
         mediaRecorder.start()
+Log.d("###", "finish start()")
     }
 
     private fun stopRec() {
@@ -141,6 +139,7 @@ class MediaProjectionService : Service() {
     }
 
     fun startMediaRecorder(currentPage: Int) {
+Log.d("###", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
@@ -153,6 +152,7 @@ class MediaProjectionService : Service() {
             setAudioSamplingRate(44100)
             setOutputFile(getFilePath(currentPage))
             prepare()
+Log.d("###", "finish prepare")
         }
 
         virtualDisplay = projection.createVirtualDisplay(
@@ -167,10 +167,13 @@ class MediaProjectionService : Service() {
         )
 
         mediaRecorder.start()
+Log.d("###", "finish start()")
     }
 
-    fun stopMediaRecorder(){
+    fun stopMediaRecorder() {
+Log.d("###", "start stop()")
         mediaRecorder.stop()
+Log.d("###", "finish start()")
     }
 
     private fun getFilePath(currentPage: Int = 0): String {

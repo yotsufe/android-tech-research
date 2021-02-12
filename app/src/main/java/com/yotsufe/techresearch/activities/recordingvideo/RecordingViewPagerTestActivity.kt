@@ -9,7 +9,6 @@ import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -19,6 +18,10 @@ import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.adapters.CountPagerAdapter
 import com.yotsufe.techresearch.databinding.ActivityRecordingViewPagerTestBinding
 import com.yotsufe.techresearch.services.MediaProjectionService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
@@ -44,6 +47,8 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
             mediaProjectionBinder = null
         }
     }
+    private lateinit var job: Job
+    private var currentPage = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +80,14 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
             }
         }
 
+        binding.leftTapArea.setOnClickListener {
+            goToLeftPage()
+        }
+
+        binding.rightTapArea.setOnClickListener {
+            goToRightPage()
+        }
+
         setViewPager()
     }
 
@@ -86,6 +99,14 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
 
     private fun createAdapter(): PagerAdapter {
         return CountPagerAdapter(this)
+    }
+
+    private fun goToLeftPage() {
+        binding.countViewPager.setCurrentItem(currentPage - 1, true)
+    }
+
+    private fun goToRightPage() {
+        binding.countViewPager.setCurrentItem(currentPage + 1, true)
     }
 
     private fun startRecording() {
@@ -146,8 +167,8 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     }
 
     override fun onPageSelected(position: Int) {
-        mediaProjectionBinder?.stopRecording()
-        mediaProjectionBinder?.startRecording(position)
+//        switchRecording(currentPage)
+        currentPage = position
     }
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -158,4 +179,10 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
         }
     }
 
+    private fun switchRecording(position: Int) {
+        job = GlobalScope.launch(Dispatchers.IO) {
+            mediaProjectionBinder?.stopRecording()
+            mediaProjectionBinder?.startRecording(position)
+        }
+    }
 }
