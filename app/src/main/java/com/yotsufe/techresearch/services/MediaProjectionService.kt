@@ -38,6 +38,7 @@ class MediaProjectionService : Service() {
         fun startRecording(currentPage: Int) {
             startMediaRecorder(currentPage)
         }
+
         fun stopRecording() {
             stopMediaRecorder()
         }
@@ -57,7 +58,7 @@ class MediaProjectionService : Service() {
         data = intent?.getParcelableExtra("data")
         code = intent?.getIntExtra("code", Activity.RESULT_OK) ?: Activity.RESULT_OK
 
-        height = intent?.getIntExtra("height", 1000)?: 1000
+        height = intent?.getIntExtra("height", 1000) ?: 1000
         width = intent?.getIntExtra("width", 1000) ?: 1000
         dpi = intent?.getIntExtra("dpi", 1000) ?: 1000
         fileName = intent?.getStringExtra("fileName") ?: "temp"
@@ -84,7 +85,9 @@ class MediaProjectionService : Service() {
             startForeground(1, notification)
         }
 
-        startRec()
+        Log.d("###", "countDownAnimation before")
+        countDownAnimation()
+//        startRec()
 
         return START_NOT_STICKY
     }
@@ -100,7 +103,7 @@ class MediaProjectionService : Service() {
         }
         projectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         projection = projectionManager.getMediaProjection(code, data!!)
-Log.d("###", "startRec()")
+        Log.d("###", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
@@ -113,7 +116,7 @@ Log.d("###", "startRec()")
             setAudioSamplingRate(44100)
             setOutputFile(getFilePath())
             prepare()
-Log.d("###", "finish prepare")
+            Log.d("###", "finish prepare")
         }
 
         virtualDisplay = projection.createVirtualDisplay(
@@ -128,7 +131,7 @@ Log.d("###", "finish prepare")
         )
 
         mediaRecorder.start()
-Log.d("###", "finish start()")
+        Log.d("###", "finish start()")
     }
 
     private fun stopRec() {
@@ -139,7 +142,7 @@ Log.d("###", "finish start()")
     }
 
     fun startMediaRecorder(currentPage: Int) {
-Log.d("###", "startRec()")
+        Log.d("###", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
@@ -152,7 +155,7 @@ Log.d("###", "startRec()")
             setAudioSamplingRate(44100)
             setOutputFile(getFilePath(currentPage))
             prepare()
-Log.d("###", "finish prepare")
+            Log.d("###", "finish prepare")
         }
 
         virtualDisplay = projection.createVirtualDisplay(
@@ -167,13 +170,13 @@ Log.d("###", "finish prepare")
         )
 
         mediaRecorder.start()
-Log.d("###", "finish start()")
+        Log.d("###", "finish start()")
     }
 
     fun stopMediaRecorder() {
-Log.d("###", "start stop()")
+        Log.d("###", "start stop()")
         mediaRecorder.stop()
-Log.d("###", "finish start()")
+        Log.d("###", "finish start()")
     }
 
     private fun getFilePath(currentPage: Int = 0): String {
@@ -184,4 +187,19 @@ Log.d("###", "finish start()")
         return "${scopedStoragePath.path}/${fileName}_${currentPage}.mp4"
     }
 
+    private fun countDownAnimation() {
+        Log.d("###", "countDownAnimation")
+        object : CountDownTimer(5000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                Log.d("###", "onTick: $millisUntilFinished")
+            }
+
+            override fun onFinish() {
+                Log.d("###", "onFinish")
+                Toast.makeText(applicationContext, "countDown", Toast.LENGTH_SHORT)
+                        .show()
+                startRec()
+            }
+        }.start()
+    }
 }

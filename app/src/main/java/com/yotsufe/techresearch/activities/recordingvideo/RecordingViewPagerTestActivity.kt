@@ -9,6 +9,7 @@ import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -173,9 +174,15 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
 
     override fun onPageScrollStateChanged(state: Int) {
         when (state) {
-            ViewPager.SCROLL_STATE_IDLE -> { }
-            ViewPager.SCROLL_STATE_DRAGGING -> { }
-            ViewPager.SCROLL_STATE_SETTLING -> { }
+            ViewPager.SCROLL_STATE_IDLE -> {
+                Log.d("###", "SCROLL_STATE_IDLE")
+            }
+            ViewPager.SCROLL_STATE_DRAGGING -> {
+                Log.d("###", "SCROLL_STATE_DRAGGING")
+            }
+            ViewPager.SCROLL_STATE_SETTLING -> {
+                Log.d("###", "SCROLL_STATE_SETTLING")
+            }
         }
     }
 
