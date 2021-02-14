@@ -29,6 +29,7 @@ import com.yotsufe.techresearch.services.MediaProjectionService
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RecordingVideoTestActivity : AppCompatActivity() {
 
@@ -36,8 +37,8 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private var isRecording: Boolean = false
 
     private val directoryPath: String = Environment.getExternalStorageDirectory().absolutePath
-    private val fileName1 = "video_recording1"
-    private val fileName2 = "video_recording2"
+    private val fileName1 = "rec_pager_test_0"
+    private val fileName2 = "rec_pager_test_2"
 
     private var count: Int = 0
 
@@ -133,6 +134,10 @@ class RecordingVideoTestActivity : AppCompatActivity() {
             stitchByMP4Parser()
         }
 
+        binding.btnGetFiles.setOnClickListener {
+            getMovieFiles()
+        }
+
         binding.btnGoToViewPager.setOnClickListener {
             startActivity(Intent(this, RecordingViewPagerTestActivity::class.java))
         }
@@ -163,40 +168,6 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         unbindService(connection)
         val intent = Intent(this, MediaProjectionService::class.java)
         stopService(intent)
-    }
-
-    private fun stitchByMP4Parser() {
-        val movie1 = MovieCreator.build("${directoryPath}/${fileName1}.mp4")
-        val movie2 = MovieCreator.build("${directoryPath}/${fileName2}.mp4")
-        val inMovies = arrayOf<Movie>(movie1, movie2)
-
-        val videoTracks = LinkedList<Track>()
-        val audioTracks = LinkedList<Track>()
-        for (m in inMovies) {
-            for (t in m.tracks) {
-                if (t.handler == "soun") {
-                    audioTracks.add(t)
-                }
-                if (t.handler == "vide") {
-                    videoTracks.add(t)
-                }
-            }
-        }
-
-        val result = Movie()
-        if (audioTracks.size > 0) {
-            result.addTrack(AppendTrack(audioTracks[0], audioTracks[1]))
-        }
-        if (videoTracks.size > 0) {
-            result.addTrack(AppendTrack(videoTracks[0], videoTracks[1]))
-        }
-
-        val out = DefaultMp4Builder().build(result)
-        val outputFilePath = "$directoryPath/after_editing.mp4"
-
-        val fos = FileOutputStream(File(outputFilePath))
-        out.writeContainer(fos.channel)
-        fos.close()
     }
 
     private fun startShareScreen() {
@@ -237,4 +208,46 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
+    private fun stitchByMP4Parser() {
+        val movie1 = MovieCreator.build("${directoryPath}/${fileName1}.mp4")
+        val movie2 = MovieCreator.build("${directoryPath}/${fileName2}.mp4")
+        val inMovies = arrayOf<Movie>(movie1, movie2)
+
+        val videoTracks = LinkedList<Track>()
+        val audioTracks = LinkedList<Track>()
+        for (m in inMovies) {
+            for (t in m.tracks) {
+                if (t.handler == "soun") {
+                    audioTracks.add(t)
+                }
+                if (t.handler == "vide") {
+                    videoTracks.add(t)
+                }
+            }
+        }
+
+        val result = Movie()
+        if (audioTracks.size > 0) {
+            result.addTrack(AppendTrack(audioTracks[0], audioTracks[1]))
+        }
+        if (videoTracks.size > 0) {
+            result.addTrack(AppendTrack(videoTracks[0], videoTracks[1]))
+        }
+
+        val out = DefaultMp4Builder().build(result)
+        val outputFilePath = "$directoryPath/after_editing.mp4"
+
+        val fos = FileOutputStream(File(outputFilePath))
+        out.writeContainer(fos.channel)
+        fos.close()
+    }
+
+    private fun getMovieFiles() {
+        val files = File(Environment.getExternalStorageDirectory().path).listFiles()
+        val movieFiles = ArrayList<File>()
+        for (file in files!!) {
+            if (file.name.endsWith(".mp4"))
+                movieFiles.add(file)
+        }
+    }
 }
