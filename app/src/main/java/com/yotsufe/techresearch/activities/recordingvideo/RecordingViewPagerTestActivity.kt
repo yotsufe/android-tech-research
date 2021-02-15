@@ -19,10 +19,7 @@ import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.adapters.CountPagerAdapter
 import com.yotsufe.techresearch.databinding.ActivityRecordingViewPagerTestBinding
 import com.yotsufe.techresearch.services.MediaProjectionService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
@@ -107,6 +104,14 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     }
 
     private fun goToRightPage() {
+        Log.d("###1", "goToRightPage")
+        mediaProjectionBinder?.stopRecording()
+        mediaProjectionBinder?.startRecording(currentPage + 1)
+        runBlocking {
+            Log.d("###", "sleep start")
+            Thread.sleep(1000)
+            Log.d("###", "sleep finish")
+        }
         binding.countViewPager.setCurrentItem(currentPage + 1, true)
     }
 
@@ -175,13 +180,13 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     override fun onPageScrollStateChanged(state: Int) {
         when (state) {
             ViewPager.SCROLL_STATE_IDLE -> {
-                Log.d("###", "SCROLL_STATE_IDLE")
+                Log.d("###10", "SCROLL_STATE_IDLE")
             }
             ViewPager.SCROLL_STATE_DRAGGING -> {
                 Log.d("###", "SCROLL_STATE_DRAGGING")
             }
             ViewPager.SCROLL_STATE_SETTLING -> {
-                Log.d("###", "SCROLL_STATE_SETTLING")
+                Log.d("###9", "SCROLL_STATE_SETTLING")
             }
         }
     }

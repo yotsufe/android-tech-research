@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.IBinder
 import android.util.DisplayMetrics
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -38,7 +39,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
 
     private val directoryPath: String = Environment.getExternalStorageDirectory().absolutePath
     private val fileName1 = "rec_pager_test_0"
-    private val fileName2 = "rec_pager_test_2"
+    private val fileName2 = "rec_pager_test_1"
 
     private var count: Int = 0
 
@@ -104,6 +105,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
 //        }
 
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        createSpinner()
 
         binding.btnRecController1.setOnClickListener {
             onRecord(isRecording)
@@ -242,12 +244,19 @@ class RecordingVideoTestActivity : AppCompatActivity() {
         fos.close()
     }
 
-    private fun getMovieFiles() {
+    private fun getMovieFiles(): ArrayList<File> {
         val files = File(Environment.getExternalStorageDirectory().path).listFiles()
         val movieFiles = ArrayList<File>()
         for (file in files!!) {
             if (file.name.endsWith(".mp4"))
                 movieFiles.add(file)
         }
+        return movieFiles
     }
+
+    private fun createSpinner() {
+        val adapter = ArrayAdapter<File>(this, R.layout.support_simple_spinner_dropdown_item, getMovieFiles())
+        binding.spinnerFiles.adapter = adapter
+    }
+
 }

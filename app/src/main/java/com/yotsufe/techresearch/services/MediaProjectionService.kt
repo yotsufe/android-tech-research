@@ -36,10 +36,12 @@ class MediaProjectionService : Service() {
         }
 
         fun startRecording(currentPage: Int) {
+            Log.d("###5", "binder: startRecording: $currentPage")
             startMediaRecorder(currentPage)
         }
 
         fun stopRecording() {
+            Log.d("###2", "binder: stopRecording")
             stopMediaRecorder()
         }
     }
@@ -142,7 +144,7 @@ class MediaProjectionService : Service() {
     }
 
     fun startMediaRecorder(currentPage: Int) {
-        Log.d("###", "startRec()")
+        Log.d("###6", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
@@ -155,7 +157,7 @@ class MediaProjectionService : Service() {
             setAudioSamplingRate(44100)
             setOutputFile(getFilePath(currentPage))
             prepare()
-            Log.d("###", "finish prepare")
+            Log.d("###7", "finish prepare")
         }
 
         virtualDisplay = projection.createVirtualDisplay(
@@ -170,13 +172,13 @@ class MediaProjectionService : Service() {
         )
 
         mediaRecorder.start()
-        Log.d("###", "finish start()")
+        Log.d("###8", "finish start()")
     }
 
     fun stopMediaRecorder() {
-        Log.d("###", "start stop()")
+        Log.d("###3", "start stop()")
         mediaRecorder.stop()
-        Log.d("###", "finish start()")
+        Log.d("###4", "finish start()")
     }
 
     private fun getFilePath(currentPage: Int = 0): String {
