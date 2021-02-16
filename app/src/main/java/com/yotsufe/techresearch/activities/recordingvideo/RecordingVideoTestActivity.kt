@@ -19,17 +19,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.googlecode.mp4parser.authoring.Movie
-import com.googlecode.mp4parser.authoring.Track
-import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder
-import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator
-import com.googlecode.mp4parser.authoring.tracks.AppendTrack
 import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.databinding.ActivityRecordingVideoTestBinding
+import com.yotsufe.techresearch.models.MovieEditor
 import com.yotsufe.techresearch.services.MediaProjectionService
 import java.io.File
-import java.io.FileOutputStream
-import java.util.*
 import kotlin.collections.ArrayList
 
 class RecordingVideoTestActivity : AppCompatActivity() {
@@ -38,8 +32,8 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private var isRecording: Boolean = false
 
     private val directoryPath: String = Environment.getExternalStorageDirectory().absolutePath
-    private val fileName1 = "rec_pager_test_0"
-    private val fileName2 = "rec_pager_test_1"
+    private val fileName1 = "rec_pager_test_0.mp4"
+    private val fileName2 = "rec_pager_test_1.mp4"
 
     private var count: Int = 0
 
@@ -211,37 +205,7 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     }
 
     private fun stitchByMP4Parser() {
-        val movie1 = MovieCreator.build("${directoryPath}/${fileName1}.mp4")
-        val movie2 = MovieCreator.build("${directoryPath}/${fileName2}.mp4")
-        val inMovies = arrayOf<Movie>(movie1, movie2)
-
-        val videoTracks = LinkedList<Track>()
-        val audioTracks = LinkedList<Track>()
-        for (m in inMovies) {
-            for (t in m.tracks) {
-                if (t.handler == "soun") {
-                    audioTracks.add(t)
-                }
-                if (t.handler == "vide") {
-                    videoTracks.add(t)
-                }
-            }
-        }
-
-        val result = Movie()
-        if (audioTracks.size > 0) {
-            result.addTrack(AppendTrack(audioTracks[0], audioTracks[1]))
-        }
-        if (videoTracks.size > 0) {
-            result.addTrack(AppendTrack(videoTracks[0], videoTracks[1]))
-        }
-
-        val out = DefaultMp4Builder().build(result)
-        val outputFilePath = "$directoryPath/after_editing.mp4"
-
-        val fos = FileOutputStream(File(outputFilePath))
-        out.writeContainer(fos.channel)
-        fos.close()
+        MovieEditor.append(directoryPath, fileName1, fileName2)
     }
 
     private fun getMovieFiles(): ArrayList<File> {
