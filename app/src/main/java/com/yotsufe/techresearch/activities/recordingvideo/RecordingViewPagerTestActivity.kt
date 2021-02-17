@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.os.Environment
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
@@ -18,6 +19,7 @@ import androidx.viewpager.widget.ViewPager
 import com.yotsufe.techresearch.R
 import com.yotsufe.techresearch.adapters.CountPagerAdapter
 import com.yotsufe.techresearch.databinding.ActivityRecordingViewPagerTestBinding
+import com.yotsufe.techresearch.models.MovieEditor
 import com.yotsufe.techresearch.services.MediaProjectionService
 import kotlinx.coroutines.*
 
@@ -107,10 +109,10 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
         Log.d("###1", "goToRightPage")
         mediaProjectionBinder?.stopRecording()
         mediaProjectionBinder?.startRecording(currentPage + 1)
+        appendMovie(currentPage)
+
         runBlocking {
-            Log.d("###", "sleep start")
             Thread.sleep(1000)
-            Log.d("###", "sleep finish")
         }
         binding.countViewPager.setCurrentItem(currentPage + 1, true)
     }
@@ -173,7 +175,6 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     }
 
     override fun onPageSelected(position: Int) {
-//        switchRecording(currentPage)
         currentPage = position
     }
 
@@ -191,10 +192,22 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
         }
     }
 
-    private fun switchRecording(position: Int) {
+    private fun appendMovie(currentPosition: Int) {
         job = GlobalScope.launch(Dispatchers.IO) {
-            mediaProjectionBinder?.stopRecording()
-            mediaProjectionBinder?.startRecording(position)
+            if (currentPosition == 1) {
+                MovieEditor.append(
+                        Environment.getExternalStorageDirectory().path,
+                        "rec_pager_test_0.mp4",
+                        "rec_pager_test_1.mp4"
+                )
+            } else if (currentPosition > 1) {
+                MovieEditor.append(
+                        Environment.getExternalStorageDirectory().path,
+                        "rec_pager_test_full.mp4",
+                        "rec_pager_test_${currentPage}.mp4"
+                )
+            }
         }
     }
+
 }

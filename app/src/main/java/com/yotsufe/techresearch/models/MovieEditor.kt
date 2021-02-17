@@ -39,11 +39,14 @@ class MovieEditor {
             }
 
             val out = DefaultMp4Builder().build(result)
-            val outputFilePath = "$dirPath/after_editing.mp4"
-
+            val outputFilePath = "$dirPath/rec_pager_test_full_temp.mp4"
             val fos = FileOutputStream(File(outputFilePath))
             out.writeContainer(fos.channel)
             fos.close()
+
+            val isDeletedFile1 = File("${dirPath}/$fileName1").delete()
+            val isDeletedFile2 = File("${dirPath}/$fileName2").delete()
+            File("$dirPath/rec_pager_test_full_temp.mp4").renameTo(File("$dirPath/rec_pager_test_full.mp4"))
         }
 
     }

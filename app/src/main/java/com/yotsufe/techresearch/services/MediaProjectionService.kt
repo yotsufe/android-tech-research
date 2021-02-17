@@ -191,7 +191,7 @@ class MediaProjectionService : Service() {
 
     private fun countDownAnimation() {
         Log.d("###", "countDownAnimation")
-        object : CountDownTimer(5000, 1000) {
+        object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 Log.d("###", "onTick: $millisUntilFinished")
             }
