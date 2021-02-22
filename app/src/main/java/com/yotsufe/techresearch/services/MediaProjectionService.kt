@@ -44,6 +44,14 @@ class MediaProjectionService : Service() {
             Log.d("###2", "binder: stopRecording")
             stopMediaRecorder()
         }
+
+        fun pauseRecording() {
+            pauseMediaRecorder()
+        }
+
+        fun resumeRecording() {
+            resumeMediaRecorder()
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder {
@@ -143,7 +151,7 @@ class MediaProjectionService : Service() {
         projection.stop()
     }
 
-    fun startMediaRecorder(currentPage: Int) {
+    private fun startMediaRecorder(currentPage: Int) {
         Log.d("###6", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -175,10 +183,26 @@ class MediaProjectionService : Service() {
         Log.d("###8", "finish start()")
     }
 
-    fun stopMediaRecorder() {
+    private fun stopMediaRecorder() {
         Log.d("###3", "start stop()")
         mediaRecorder.stop()
         Log.d("###4", "finish start()")
+    }
+
+    private fun pauseMediaRecorder() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.d("###", "start pause()")
+            mediaRecorder.pause()
+            Log.d("###", "finish pause()")
+        }
+    }
+
+    private fun resumeMediaRecorder() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.d("###", "start resume()")
+            mediaRecorder.resume()
+            Log.d("###", "finish resume()")
+        }
     }
 
     private fun getFilePath(currentPage: Int = 0): String {

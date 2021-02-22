@@ -32,7 +32,6 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     }
     private lateinit var binding: ActivityRecordingViewPagerTestBinding
     private var recordingStatus = RecordingStatus.STOPPING
-    private var isRecording = false
     private var mediaProjection: MediaProjection? = null
     private var mediaProjectionBinder: MediaProjectionService.MediaProjectionBinder? = null
     private val mediaProjectionManager: MediaProjectionManager by lazy {
@@ -58,12 +57,10 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
         binding.btnRecStart.setOnClickListener {
             when (recordingStatus) {
                 RecordingStatus.RECORDING -> {
-                    // TODO pause機能を追加する
-//                    pauseRecording()
+                    pauseRecording()
                 }
                 RecordingStatus.PAUSING -> {
-                    // TODO resume機能を追加する
-//                    resumeRecording()
+                    resumeRecording()
                 }
                 RecordingStatus.STOPPING -> {
                     startRecording()
@@ -119,14 +116,12 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
 
     private fun startRecording() {
         binding.btnRecStart.setImageResource(R.drawable.ic_pause24)
-        isRecording = true
         recordingStatus = RecordingStatus.RECORDING
         startShareScreen()
     }
 
     private fun stopRecording() {
         binding.btnRecStart.setImageResource(R.drawable.ic_baseline_videocam_24)
-        isRecording = false
         unbindService(connection)
         val intent = Intent(this, MediaProjectionService::class.java)
         stopService(intent)
@@ -137,6 +132,20 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
             startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 1000)
             return
         }
+    }
+
+    private fun pauseRecording() {
+        Log.d("###", "push pause")
+        mediaProjectionBinder?.pauseRecording()
+        binding.btnRecStart.setImageResource(R.drawable.ic_baseline_videocam_24)
+        recordingStatus = RecordingStatus.PAUSING
+    }
+
+    private fun resumeRecording() {
+        Log.d("###", "push resume")
+        mediaProjectionBinder?.resumeRecording()
+        binding.btnRecStart.setImageResource(R.drawable.ic_pause24)
+        recordingStatus = RecordingStatus.PAUSING
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
