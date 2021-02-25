@@ -99,7 +99,6 @@ class RecordingVideoTestActivity : AppCompatActivity() {
 //        }
 
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-        createSpinner()
 
         binding.btnRecController1.setOnClickListener {
             onRecord(isRecording)
@@ -138,6 +137,8 @@ class RecordingVideoTestActivity : AppCompatActivity() {
             startActivity(Intent(this, RecordingViewPagerTestActivity::class.java))
         }
 
+        binding.spinnerFiles1.adapter = createSpinner()
+        binding.spinnerFiles2.adapter = createSpinner()
 
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
@@ -211,16 +212,17 @@ class RecordingVideoTestActivity : AppCompatActivity() {
     private fun getMovieFiles(): ArrayList<File> {
         val files = File(Environment.getExternalStorageDirectory().path).listFiles()
         val movieFiles = ArrayList<File>()
-        for (file in files!!) {
-            if (file.name.endsWith(".mp4"))
-                movieFiles.add(file)
+        if (files != null) {
+            for (file in files) {
+                if (file.name.endsWith(".mp4"))
+                    movieFiles.add(file)
+            }
         }
         return movieFiles
     }
 
-    private fun createSpinner() {
-        val adapter = ArrayAdapter<File>(this, R.layout.support_simple_spinner_dropdown_item, getMovieFiles())
-        binding.spinnerFiles.adapter = adapter
+    private fun createSpinner(): ArrayAdapter<File> {
+        return ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, getMovieFiles())
     }
 
 }
