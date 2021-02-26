@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.IBinder
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -85,6 +86,7 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
             goToRightPage()
         }
 
+        setButtonsVisibility(recordingStatus)
         setViewPager()
     }
 
@@ -114,14 +116,34 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
         binding.countViewPager.setCurrentItem(currentPage + 1, true)
     }
 
+    private fun setButtonsVisibility(recordingStatus: RecordingStatus) {
+        when (recordingStatus) {
+            RecordingStatus.PAUSING -> {
+                binding.btnRecStart.setImageResource(R.drawable.ic_baseline_videocam_24)
+                binding.btnRecStop.visibility = View.VISIBLE
+                binding.btnRecRetake.visibility = View.VISIBLE
+            }
+            RecordingStatus.RECORDING -> {
+                binding.btnRecStart.setImageResource(R.drawable.ic_pause24)
+                binding.btnRecStop.visibility = View.VISIBLE
+                binding.btnRecRetake.visibility = View.GONE
+            }
+            RecordingStatus.STOPPING -> {
+                binding.btnRecStart.setImageResource(R.drawable.ic_baseline_videocam_24)
+                binding.btnRecStop.visibility = View.GONE
+                binding.btnRecRetake.visibility = View.GONE
+            }
+        }
+    }
+
     private fun startRecording() {
-        binding.btnRecStart.setImageResource(R.drawable.ic_pause24)
         recordingStatus = RecordingStatus.RECORDING
+        setButtonsVisibility(recordingStatus)
         startShareScreen()
     }
 
     private fun stopRecording() {
-        binding.btnRecStart.setImageResource(R.drawable.ic_baseline_videocam_24)
+        setButtonsVisibility(recordingStatus)
         unbindService(connection)
         val intent = Intent(this, MediaProjectionService::class.java)
         stopService(intent)
@@ -137,15 +159,15 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     private fun pauseRecording() {
         Log.d("###", "push pause")
         mediaProjectionBinder?.pauseRecording()
-        binding.btnRecStart.setImageResource(R.drawable.ic_baseline_videocam_24)
         recordingStatus = RecordingStatus.PAUSING
+        setButtonsVisibility(recordingStatus)
     }
 
     private fun resumeRecording() {
         Log.d("###", "push resume")
         mediaProjectionBinder?.resumeRecording()
-        binding.btnRecStart.setImageResource(R.drawable.ic_pause24)
         recordingStatus = RecordingStatus.PAUSING
+        setButtonsVisibility(recordingStatus)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -157,8 +179,8 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
         if (resultCode != Activity.RESULT_OK) {
             Toast.makeText(this, "録画を開始できませんでした。", Toast.LENGTH_SHORT)
                 .show()
-            binding.btnRecStart.setImageResource(R.drawable.ic_baseline_videocam_24)
-            RecordingStatus.STOPPING
+            recordingStatus = RecordingStatus.STOPPING
+            setButtonsVisibility(recordingStatus)
             return
         }
 
