@@ -18,7 +18,7 @@ class MediaProjectionService : Service() {
 
     private var data: Intent? = null
     private var code = Activity.RESULT_OK
-    private lateinit var mediaRecorder: MediaRecorder
+    private var mediaRecorder: MediaRecorder? = null
     private lateinit var projectionManager: MediaProjectionManager
     private lateinit var projection: MediaProjection
     private lateinit var virtualDisplay: VirtualDisplay
@@ -30,18 +30,15 @@ class MediaProjectionService : Service() {
 
     inner class MediaProjectionBinder : Binder() {
         fun showToast() {
-            Log.d("###", "showToast()")
             Toast.makeText(applicationContext, "testBinder", Toast.LENGTH_LONG)
                     .show()
         }
 
         fun startRecording(currentPage: Int) {
-            Log.d("###5", "binder: startRecording: $currentPage")
             startMediaRecorder(currentPage)
         }
 
         fun stopRecording() {
-            Log.d("###2", "binder: stopRecording")
             stopMediaRecorder()
         }
 
@@ -55,12 +52,10 @@ class MediaProjectionService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder {
-        Log.d("###", "onBind start.")
         return binder
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        Log.d("###", "onUnbind start.")
         return super.onUnbind(intent)
     }
 
@@ -95,9 +90,7 @@ class MediaProjectionService : Service() {
             startForeground(1, notification)
         }
 
-        Log.d("###", "countDownAnimation before")
         countDownAnimation()
-//        startRec()
 
         return START_NOT_STICKY
     }
@@ -113,7 +106,6 @@ class MediaProjectionService : Service() {
         }
         projectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         projection = projectionManager.getMediaProjection(code, data!!)
-        Log.d("###", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
@@ -126,7 +118,6 @@ class MediaProjectionService : Service() {
             setAudioSamplingRate(44100)
             setOutputFile(getFilePath())
             prepare()
-            Log.d("###", "finish prepare")
         }
 
         virtualDisplay = projection.createVirtualDisplay(
@@ -135,24 +126,23 @@ class MediaProjectionService : Service() {
                 height,
                 dpi,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                mediaRecorder.surface,
+                mediaRecorder?.surface,
                 null,
                 null
         )
 
-        mediaRecorder.start()
-        Log.d("###", "finish start()")
+        mediaRecorder?.start()
     }
 
     private fun stopRec() {
-        mediaRecorder.stop()
-        mediaRecorder.release()
+        mediaRecorder?.stop()
+        mediaRecorder?.release()
+        mediaRecorder = null
         virtualDisplay.release()
         projection.stop()
     }
 
     private fun startMediaRecorder(currentPage: Int) {
-        Log.d("###6", "startRec()")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
@@ -165,7 +155,6 @@ class MediaProjectionService : Service() {
             setAudioSamplingRate(44100)
             setOutputFile(getFilePath(currentPage))
             prepare()
-            Log.d("###7", "finish prepare")
         }
 
         virtualDisplay = projection.createVirtualDisplay(
@@ -174,55 +163,47 @@ class MediaProjectionService : Service() {
                 height,
                 dpi,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                mediaRecorder.surface,
+                mediaRecorder?.surface,
                 null,
                 null
         )
 
-        mediaRecorder.start()
-        Log.d("###8", "finish start()")
+        mediaRecorder?.start()
     }
 
     private fun stopMediaRecorder() {
-        Log.d("###3", "start stop()")
-        mediaRecorder.stop()
-        Log.d("###4", "finish start()")
+        mediaRecorder?.stop()
+        mediaRecorder?.release()
+        mediaRecorder = null
     }
 
     private fun pauseMediaRecorder() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.d("###", "start pause()")
-            mediaRecorder.pause()
-            Log.d("###", "finish pause()")
+            mediaRecorder?.pause()
         }
     }
 
     private fun resumeMediaRecorder() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.d("###", "start resume()")
-            mediaRecorder.resume()
-            Log.d("###", "finish resume()")
+            mediaRecorder?.resume()
         }
     }
 
     private fun getFilePath(currentPage: Int = 0): String {
         // TODO 適切なストレージを指定する
         val scopedStoragePath = Environment.getExternalStorageDirectory()
-        Log.d("###", scopedStoragePath!!.absolutePath)
         Log.d("###", "${scopedStoragePath.path}/${fileName}_${currentPage}.mp4")
         return "${scopedStoragePath.path}/${fileName}_${currentPage}.mp4"
     }
 
     private fun countDownAnimation() {
-        Log.d("###", "countDownAnimation")
-        object : CountDownTimer(3000, 1000) {
+        object : CountDownTimer(1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 Log.d("###", "onTick: $millisUntilFinished")
             }
 
             override fun onFinish() {
-                Log.d("###", "onFinish")
-                Toast.makeText(applicationContext, "countDown", Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "Rec Start", Toast.LENGTH_SHORT)
                         .show()
                 startRec()
             }

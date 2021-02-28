@@ -71,11 +71,19 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
 
         binding.btnRecStop.setOnClickListener {
             when (recordingStatus) {
-                RecordingStatus.STOPPING -> { }
+                RecordingStatus.STOPPING -> {}
                 else -> {
                     stopRecording()
                 }
             }
+        }
+
+        binding.btnRecRetake.setOnClickListener {
+            mediaProjectionBinder?.stopRecording()
+            goToLeftPage()
+            recordingStatus = RecordingStatus.RECORDING
+            setButtonsVisibility(recordingStatus)
+            goToRightPage()
         }
 
         binding.leftTapArea.setOnClickListener {
@@ -105,7 +113,6 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     }
 
     private fun goToRightPage() {
-        Log.d("###1", "goToRightPage")
         mediaProjectionBinder?.stopRecording()
         mediaProjectionBinder?.startRecording(currentPage + 1)
         appendMovie(currentPage)
@@ -143,10 +150,11 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     }
 
     private fun stopRecording() {
-        setButtonsVisibility(recordingStatus)
         unbindService(connection)
         val intent = Intent(this, MediaProjectionService::class.java)
         stopService(intent)
+        recordingStatus = RecordingStatus.STOPPING
+        setButtonsVisibility(recordingStatus)
     }
 
     private fun startShareScreen() {
@@ -157,14 +165,12 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
     }
 
     private fun pauseRecording() {
-        Log.d("###", "push pause")
         mediaProjectionBinder?.pauseRecording()
         recordingStatus = RecordingStatus.PAUSING
         setButtonsVisibility(recordingStatus)
     }
 
     private fun resumeRecording() {
-        Log.d("###", "push resume")
         mediaProjectionBinder?.resumeRecording()
         recordingStatus = RecordingStatus.PAUSING
         setButtonsVisibility(recordingStatus)
