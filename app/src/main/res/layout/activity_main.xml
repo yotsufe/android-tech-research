@@ -70,10 +70,10 @@
             app:layout_constraintVertical_bias=".5" />
 
         <Button
-            android:id="@+id/btn_recording_test"
+            android:id="@+id/btn_recording_sound_test"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Recording Test"
+            android:text="Recording Sound Test"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

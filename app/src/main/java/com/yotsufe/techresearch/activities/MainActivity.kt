@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, WebViewTestActivity::class.java))
         }
 
-        binding.btnRecordingTest.setOnClickListener {
-            startActivity(Intent(this, RecordingTestActivity::class.java))
+        binding.btnRecordingSoundTest.setOnClickListener {
+            startActivity(Intent(this, RecordingSoundTestActivity::class.java))
         }
 
         binding.btnRecordingVideoTest.setOnClickListener {
