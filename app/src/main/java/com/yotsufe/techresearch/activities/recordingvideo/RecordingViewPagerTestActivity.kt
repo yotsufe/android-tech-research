@@ -172,7 +172,7 @@ class RecordingViewPagerTestActivity : AppCompatActivity(), ViewPager.OnPageChan
 
     private fun resumeRecording() {
         mediaProjectionBinder?.resumeRecording()
-        recordingStatus = RecordingStatus.PAUSING
+        recordingStatus = RecordingStatus.RECORDING
         setButtonsVisibility(recordingStatus)
     }
 
