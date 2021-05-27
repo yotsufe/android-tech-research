@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <title>Form</title>
+
+  <script type="text/javascript">
+    function getValueById(id) {
+      Android.getValue(id, document.getElementById(id).value);
+    }
+
+    function setValue(id, value) {
+      document.getElementById(id).value = value;
+    }
+  </script>
+
+</head>
+
+<body>
+<div id="container">
+  <div class="form">
+    <h2>Message</h2>
+    <textarea placeholder="please enter your message" id="message_body" rows="8" cols="40"></textarea>
+
+    <h2>Email Address</h2>
+    <input placeholder="abcde@test.com" id="email_body" />
+  </div>
+</div>
+</body>
+
+</html>

@@ -8,6 +8,8 @@ import com.google.firebase.inappmessaging.ktx.inAppMessaging
 import com.google.firebase.ktx.Firebase
 import com.yotsufe.techresearch.*
 import com.yotsufe.techresearch.activities.recordingvideo.RecordingVideoTestActivity
+import com.yotsufe.techresearch.activities.webview.WebViewMenuActivity
+import com.yotsufe.techresearch.activities.webview.WebViewTestActivity
 import com.yotsufe.techresearch.databinding.ActivityMainBinding
 import com.yotsufe.techresearch.inappmessaging.CustomMessagingDisplayComponent
 
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnWebViewTest.setOnClickListener {
-            startActivity(Intent(this, WebViewTestActivity::class.java))
+            startActivity(Intent(this, WebViewMenuActivity::class.java))
         }
 
         binding.btnRecordingSoundTest.setOnClickListener {

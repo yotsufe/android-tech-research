@@ -1,4 +1,4 @@
-package com.yotsufe.techresearch.activities
+package com.yotsufe.techresearch.activities.webview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,7 +20,7 @@ class WebViewTestActivity : AppCompatActivity() {
         )
         WebView.setWebContentsDebuggingEnabled(true)
 
-        binding.wevViewTest.let {
+        binding.webView.let {
             it.webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                     view?.loadUrl(request?.url.toString())

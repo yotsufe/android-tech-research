@@ -35,7 +35,9 @@
         <activity android:name="com.yotsufe.techresearch.activities.RecordingSoundTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.recordingvideo.RecordingViewPagerTestActivity" />
         <activity android:name="com.yotsufe.techresearch.activities.recordingvideo.RecordingVideoTestActivity" />
-        <activity android:name="com.yotsufe.techresearch.activities.WebViewTestActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.webview.WebViewMenuActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.webview.WebViewLocalFileActivity" />
+        <activity android:name="com.yotsufe.techresearch.activities.webview.WebViewTestActivity" />
 
         <service
             android:name="com.yotsufe.techresearch.services.ResearchFirebaseMessagingService"
